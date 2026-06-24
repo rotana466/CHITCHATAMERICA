@@ -404,8 +404,26 @@
                 } else {
                     errorBox.textContent = "Invalid Login Code. Please use the assigned registration code.";
                     errorBox.classList.remove('hidden');
-                }
+                loginForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('loginUser').value.trim();
+    const codeInput = document.getElementById('loginCode').value.trim();
+    const errorBox = document.getElementById('loginError');
+
+    if (codeInput === REQUIRED_CODE) {
+        errorBox.classList.add('hidden');
+
+        // Redirect to dashboard page
+        window.location.href = "dashboard.html";
+
+    } else {
+        errorBox.textContent = "Invalid Login Code. Please use the assigned registration code.";
+        errorBox.classList.remove('hidden');
+    }
+});
             });
+            
 
             registerForm.addEventListener('submit', function(event) {
                 event.preventDefault();
