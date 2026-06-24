@@ -1,1 +1,420 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHITCHATT - Premium</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #05050c;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Sparking Star Canvas Background */
+        #starCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Frosted Glass Container with Neon Glow */
+        .container {
+            position: relative;
+            z-index: 2;
+            background: rgba(13, 13, 25, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 35px;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.15), 0 15px 35px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 420px;
+            transition: all 0.4s ease;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 28px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 5px 15px rgba(0, 242, 254, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a0aec0;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            font-size: 16px;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Force dark theme option backgrounds on mobile devices */
+        select option {
+            background-color: #0d0d19;
+            color: #ffffff;
+        }
+
+        input:focus, select:focus {
+            border-color: #00f2fe;
+            background: rgba(255, 255, 255, 0.09);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .checkbox-group input {
+            margin-top: 2px;
+            width: 18px;
+            height: 18px;
+            accent-color: #00f2fe;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            font-size: 13px;
+            cursor: pointer;
+            color: #cbd5e0;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        /* Neon Glowing Button */
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border: none;
+            border-radius: 8px;
+            color: #05050c;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #a0aec0;
+        }
+
+        .switch-link span {
+            color: #00f2fe;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .switch-link span:hover {
+            color: #4facfe;
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+        }
+
+        /* Dynamic Error Messages */
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .error {
+            background-color: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.4);
+        }
+
+        /* Success Pane Layout */
+        .success-box {
+            text-align: center;
+        }
+
+        .success-text {
+            color: #48bb78;
+            font-weight: 700;
+            font-size: 19px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            text-shadow: 0 0 10px rgba(72, 187, 120, 0.3);
+        }
+
+        .code-display {
+            background: rgba(255, 255, 255, 0.07);
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #00f2fe;
+            margin: 18px 0;
+            border: 1px dashed rgba(0, 242, 254, 0.5);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="starCanvas"></canvas>
+
+    <div class="container">
+        <div id="loginView">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUser">User Name</label>
+                    <input type="text" id="loginUser" required placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="loginCode">Login Code</label>
+                    <input type="text" id="loginCode" required placeholder="Enter login code">
+                </div>
+                <button type="submit">Login</button>
+                <div id="loginError" class="message error hidden"></div>
+            </form>
+            <div class="switch-link">
+                Don't have an account? <span id="toRegister">Register</span>
+            </div>
+        </div>
+
+        <div id="registerView" class="hidden">
+            <h2>Register</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regName">Full Name</label>
+                    <input type="text" id="regName" required placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label for="regAge">Age</label>
+                    <input type="number" id="regAge" min="1" required placeholder="Your age">
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" required placeholder="Your email address">
+                </div>
+                <div class="form-group">
+                    <label for="regGender">Gender</label>
+                    <select id="regGender" required>
+                        <option value="" disabled selected>Select your gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="regCountry">Country</label>
+                    <input type="text" id="regCountry" required placeholder="Your country">
+                </div>
+                <div class="form-group">
+                    <label for="partnerGender">Interested Partner Gender</label>
+                    <select id="partnerGender" required>
+                        <option value="" disabled selected>Select preferred gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="All">All / Both</option>
+                    </select>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to the Terms and Conditions</label>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+            <div class="switch-link">
+                Already registered? <span id="toLogin">Login</span>
+            </div>
+        </div>
+
+        <div id="successView" class="hidden success-box">
+            <h2 style="background: linear-gradient(45deg, #48bb78, #38a169); -webkit-background-clip: text;">Registered!</h2>
+            <div class="success-text">
+                Dear <span id="displayName" style="color: #ffffff; text-decoration: underline;"></span>,<br>
+                YOU HAVE SUCCESSFULLY REGISTERED CHITCHATT ACCOUNT.
+            </div>
+            <p style="color: #a0aec0; font-size: 13px; letter-spacing: 1px;">YOUR LOGIN CODE IS</p>
+            <div class="code-display">EK29202392KE</div>
+            <p style="color: #f56565; font-weight: bold; font-size: 13px; margin-bottom: 22px; letter-spacing: 1px;">SAVE THIS CODE</p>
+            <button id="successGoToLogin">Go to Login</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // --- STARFIELD BACKGROUND SYSTEM ---
+            const canvas = document.getElementById('starCanvas');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initStars();
+            }
+
+            function initStars() {
+                stars = [];
+                const starCount = Math.min(Math.floor(canvas.width * canvas.height / 4000), 150);
+                for(let i = 0; i < starCount; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.5,
+                        alpha: Math.random(),
+                        speed: 0.01 + Math.random() * 0.02
+                    });
+                }
+            }
+
+            function drawStars() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#05050c';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                for(let i = 0; i < stars.length; i++) {
+                    let s = stars[i];
+                    s.alpha += s.speed;
+                    if(s.alpha > 1 || s.alpha < 0) {
+                        s.speed = -s.speed;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(s.alpha, 0.1)})`;
+                    ctx.shadowBlur = s.radius * 4;
+                    ctx.shadowColor = '#ffffff';
+                    ctx.fill();
+                }
+                ctx.shadowBlur = 0; // Reset shadow
+                requestAnimationFrame(drawStars);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            drawStars();
+
+            // --- FUNCTIONAL SCRIPT LOGIC ---
+            const REQUIRED_CODE = "EK29202392KE";
+
+            const loginView = document.getElementById('loginView');
+            const registerView = document.getElementById('registerView');
+            const successView = document.getElementById('successView');
+            
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            const toRegisterBtn = document.getElementById('toRegister');
+            const toLoginBtn = document.getElementById('toLogin');
+            const successGoToLoginBtn = document.getElementById('successGoToLogin');
+
+            function changeView(targetView) {
+                loginView.classList.add('hidden');
+                registerView.classList.add('hidden');
+                successView.classList.add('hidden');
+                targetView.classList.remove('hidden');
+            }
+
+            toRegisterBtn.addEventListener('click', () => changeView(registerView));
+            toLoginBtn.addEventListener('click', () => {
+                document.getElementById('loginError').classList.add('hidden');
+                changeView(loginView);
+            });
+            successGoToLoginBtn.addEventListener('click', () => {
+                document.getElementById('loginError').classList.add('hidden');
+                changeView(loginView);
+            });
+
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const username = document.getElementById('loginUser').value.trim();
+                const codeInput = document.getElementById('loginCode').value.trim();
+                const errorBox = document.getElementById('loginError');
+
+                if (codeInput === REQUIRED_CODE) {
+                    errorBox.classList.add('hidden');
+                    alert('Welcome back, ' + username + '! Login successful.');
+                } else {
+                    errorBox.textContent = "Invalid Login Code. Please use the assigned registration code.";
+                    errorBox.classList.remove('hidden');
+                }
+            });
+
+            registerForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const fullName = document.getElementById('regName').value.trim();
+                document.getElementById('displayName').textContent = fullName;
+                registerForm.reset();
+                changeView(successView);
+            });
+        });
+    </script>
+</body>
+</html>
